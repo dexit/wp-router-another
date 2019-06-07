@@ -88,6 +88,7 @@ function route_handler() {
 
 ## Route options and permissions
 There are additional options that can be passed in the `$options` parameter.
+
 | Option | Description | Default |
 |--|--|--|
 | `robots` | *(bool) Add nofollow and noindex to the request page header.* | `false` |
