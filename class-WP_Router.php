@@ -45,8 +45,8 @@ class WP_Router {
 		// Modify WordPress query
 		add_action( 'parse_query', [ $this, 'query_modifier' ] );
 
-		// Run route callback before template redirect
-		add_action( 'template_redirect', [ $this, 'handler' ] );
+		// Run route callback on WordPress init
+		add_action( 'init', [ $this, 'handler' ] );
 	}
 
 	/**
