@@ -246,9 +246,9 @@ class WP_Router {
 		if ( $matched && is_object( $matched ) ) {
 			$params = $this->get_params( $matched->route );
 
-			$route_classes	= !empty( $match->body_class ) ? $match->body_class : '';
+			$route_classes	= !empty( $matched->body_class ) ? $matched->body_class : '';
 			$route_classes	= is_string( $route_classes ) ? explode( ' ', $route_classes ) : [];
-			$route_classes	= array_merge( [ 'custom-route-page' ], $route_classes );
+			$route_classes	= array_filter( array_merge( [ 'custom-route-page' ], $route_classes ) );
 
 			add_filter( 'body_class', function( $classes, $class ) use ( $route_classes ) {
 				$search = array_search( 'error404', $classes );
