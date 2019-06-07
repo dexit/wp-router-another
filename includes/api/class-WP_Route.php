@@ -40,6 +40,40 @@ class WP_Route {
 		$this->callback	= $callback;
 		$this->methods	= $methods;
 		$this->options	= wp_parse_args( $options, $this->options );
+
+		// Add a page title
+		add_filter( 'the_title', [ $this, 'page_title' ], 1 );
+		add_filter( 'wp_title', [ $this, 'page_title' ], 1 );
+	}
+
+	/**
+	 * Get route related meta
+	 *
+	 * @param	string	$attr
+	 * @return	mixed
+	 */
+	public function get_meta( $attr = false ) {
+		$meta = get_option( $this->id, [] );
+
+		if ( $attr ) {
+			return isset( $meta[ $attr ] ) ? $meta[ $attr ] : false;
+		}
+
+		return $meta;
+	}
+
+	/**
+	 * Add custom title to route
+	 *
+	 * @param	string	$default
+	 * @return	string
+	 */
+	public function page_title( $default ): ?string {
+		if ( $title = $this->get_meta( 'title' ) ) {
+			return $title;
+		}
+
+		return null;
 	}
 
 	/**
