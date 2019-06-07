@@ -132,11 +132,21 @@ class WP_Router {
 			return new WP_Error( 'route_already_exists', 'A route with that path and method already exists' );
 		}
 
-		$this->routes[ $method ][ $route ] = (object)array_merge( [
-			'route'		=> $route,
-			'callback'	=> $callback
-		], $options );
+		// Merge optional args with defaults
+		$args = wp_parse_args( $options, [
+			'robots'		=> false,			// If page allows indexing by robots
+			'private'		=> false,			// Make route private (has to be authenticated)
+			'capabilities'	=> 'manage_options'	// If private, user has to match these capabilities (see https://wordpress.org/support/article/roles-and-capabilities/)
+		] );
 
+		// Override static arguments
+		$args[ 'route' ] = $route;
+		$args[ 'callback' ] = $callback;
+
+		// Store route
+		$this->routes[ $method ][ $route ] = (object)$args;
+
+		// Return route
 		return $this->exists( $route, $method );
 	}
 
@@ -244,8 +254,26 @@ class WP_Router {
 	public function handler() {
 		$matched = $this->url_is_route();
 		if ( $matched && is_object( $matched ) ) {
+
+			// Handle route permissions
+			if ( $matched->private ) {
+				if ( !is_user_logged_in() || !current_user_can( $matched->capabilities ) ) {
+					status_header( 401 );
+					wp_die( __( 'Sorry, you are not allowed to access this page.' ) );
+				}
+			}
+
+			// Get route parameters
 			$params = $this->get_params( $matched->route );
 
+			// Add robots
+			if ( $matched->robots ){
+				add_filter( 'wp_head', function() {
+					return '<meta name="robots" content="noindex,nofollow"/>';
+				} );
+			}
+
+			// Add body classes
 			$route_classes	= !empty( $matched->body_class ) ? $matched->body_class : '';
 			$route_classes	= is_string( $route_classes ) ? explode( ' ', $route_classes ) : [];
 			$route_classes	= array_filter( array_merge( [ 'custom-route-page' ], $route_classes ) );
