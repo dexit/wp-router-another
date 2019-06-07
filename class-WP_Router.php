@@ -1,7 +1,9 @@
 <?php
 
 /**
- *
+ * WP_Router
+ * 
+ * @author Levi Cole <hello@thelevicole.com>
  */
 class WP_Router {
 
@@ -263,8 +265,12 @@ class WP_Router {
 
 			status_header( 200 );
 
-			call_user_func_array( $matched->callback, [ $params ] );
-			exit;
+			if ( is_callable( $matched->callback ) ) {
+				call_user_func_array( $matched->callback, [ $params ] );
+				exit;
+			}
+
+			return new WP_Error( 'not_callable', 'Route handler is not callable' );
 		}
 	}
 
