@@ -85,3 +85,24 @@ function route_handler() {
 	echo $params[ 'third' ];
 }
 ```
+
+## Route options and permissions
+There are additional options that can be passed in the `$options` parameter.
+| Option | Description | Default |
+|--|--|--|
+| `robots` | *(bool) Add nofollow and noindex to the request page header.* | `false` |
+| `private` | *(bool) Use this option to expose the route to authenticated users only.* | `false` |
+| `capabilities` | *(string) Used in conjunction with `private` option. Only allow specific roles or capabilities to access the route.* | `'manage_options'` |
+
+### Usage
+```php
+wp_router_get( '/profile', 'route_handler', [
+	'robots' => true, // Stop bots
+	'private' => true, // Only authed users
+	'capabilities' => 'subscriber' // Subscribers only
+] );
+
+function route_handler() {
+	// Do something...
+}
+```
