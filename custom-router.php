@@ -7,7 +7,7 @@
  * Plugin URI: https://github.com/thelevicole/wp-router/
  * Author: Levi Cole
  * Author URI: https://thelevicole.com
- * Text Domain: routerplugin
+ * Text Domain: customrouter
  */
 
 class WP_Router_Plugin {
