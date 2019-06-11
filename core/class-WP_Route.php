@@ -78,7 +78,7 @@ class WP_Route {
 	function __construct( $method, string $route, $callback, array $options = [] ) {
 
 		$this->request_uri = $this->clean_path( $_SERVER[ 'REQUEST_URI' ] );
-		$methods = $this->tokenise( $method, ',' );
+		$methods = array_map( 'strtoupper', $this->tokenise( $method, ',' ) );
 
 		// Set object attributes
 		$this->id		= sanitize_title( $route . '-' . implode( '.', $methods ) );
