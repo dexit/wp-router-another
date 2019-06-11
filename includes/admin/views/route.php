@@ -15,6 +15,20 @@
 					<input type="text" name="route-settings-options[title]" style="width: 100%; max-width: 300px;" value="<?= $found->get_option( 'title' ); ?>">
 				</td>
 			</tr>
+			<?php foreach ( $found->options as $key => $value ): ?>
+				<?php if ( $key !== 'title' ): ?>
+					<tr>
+						<th scope="row"><?= $key; ?></th>
+						<td><code><?php
+							if ( is_bool( $value ) ) {
+								echo $value ? 'true' : 'false';
+							} else {
+								echo $value;
+							}
+						?></code></td>
+					</tr>
+				<?php endif ?>
+			<?php endforeach ?>
 		</tbody>
 	</table>
 	<?php

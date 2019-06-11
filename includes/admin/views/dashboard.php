@@ -2,6 +2,7 @@
 	<thead>
 		<tr>
 			<td>Route</td>
+			<td>Title</td>
 			<td>Method(s)</td>
 			<td>Permissions</td>
 		</tr>
@@ -9,6 +10,7 @@
 	<tfoot>
 		<tr>
 			<td>Route</td>
+			<td>Title</td>
 			<td>Method(s)</td>
 			<td>Permissions</td>
 		</tr>
@@ -22,6 +24,9 @@
 						<div class="row-actions">
 							<span class="edit"><a href="<?= add_query_arg( 'route', $route->id, $this->url ); ?>">Settings</a></span>
 						</div>
+					</td>
+					<td>
+						<?= $route->get_option( 'title' ) ?: '-'; ?>
 					</td>
 					<td>
 						<?= implode( ', ', array_map( function( $el ) {
