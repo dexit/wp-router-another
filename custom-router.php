@@ -58,6 +58,12 @@ class WP_Router_Plugin {
 			router_require( 'includes/admin/class-WP_Router_Admin.php' );
 		}
 
+
+		// Database option filters for WP_Route
+		add_filter( 'wp_router/get_option', function( $value, $option, $route ) {
+			$data = get_option( $route->id, [] );
+			return !empty( $data[ $option ] ) ? $data[ $option ] : $value;
+		}, 10, 3 );
 	}
 
 	/**
