@@ -161,7 +161,7 @@ wp_router_get( '/path/:param1/:param2/:third', function() {
 
 ### wp_router_param()
 
-`wp_router_params( string $param, mixed $fallback = false )`
+`wp_router_param( string $param, mixed $fallback = false )`
 
 #### Description
 
@@ -176,8 +176,6 @@ Return a single value of a route parameter.
 `$fallback`
 
 *(mixed) (Optional) The fallback value if a parameter is empty.*
-
-*For example `/locations/:country/:city` and `/:author/books`*
 
 #### Usage
 
