@@ -13,7 +13,6 @@
 class WP_Router_Plugin {
 
 	protected $settings = [];
-	protected $debug = false;
 
 	function __construct() {}
 
@@ -32,13 +31,10 @@ class WP_Router_Plugin {
 		$this->settings = [
 
 			// Generic
-			'version'		=> $this->debug ? date( 'U' ) : '0.1.0',
+			'version'		=> '0.1.0',
 			'path'			=> plugin_dir_path( __FILE__ ),
 			'url'			=> plugin_dir_url( __FILE__ ),
 			'basename'		=> plugin_basename( __FILE__ ),
-
-			// Routing
-			'regex'			=> '\:([\-_a-zA-Z0-9]{1,})',
 
 			// WordPress
 			'wp_version'	=> get_bloginfo( 'version' ),
@@ -54,13 +50,12 @@ class WP_Router_Plugin {
 
 		// API includes
 		require_once WP_Router_PATH . 'includes/api/general.php';
-		router_require( 'includes/api/trait-WP_Route_Shared.php' );
-		router_require( 'includes/api/class-WP_Route.php' );
-		router_require( 'includes/class-WP_Router.php' );
+		router_require( 'core/class-WP_Route.php' );
+		router_require( 'core/class-WP_Router.php' );
 		router_require( 'includes/api/router.php' );
 
 		if ( is_admin() ) {
-			router_require( 'includes/class-WP_Router_Admin.php' );
+			router_require( 'includes/admin/class-WP_Router_Admin.php' );
 		}
 
 	}

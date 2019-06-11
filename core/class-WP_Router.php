@@ -7,10 +7,6 @@
  */
 class WP_Router {
 
-	use WP_Route_Shared {
-		WP_Route_Shared::__construct as private __sharedConstruct;
-	}
-
 	/**
 	 * Routes grouped by method
 	 *
@@ -19,9 +15,6 @@ class WP_Router {
 	protected $routes = [];
 
 	function __construct() {
-
-		// Trait constructor
-		$this->__sharedConstruct();
 
 		// Run handler on init
 		$this->handler();
@@ -80,7 +73,7 @@ class WP_Router {
 	 */
 	public function exists( string $route, $method = 'ANY' ): ?WP_Route {
 
-		$methods = $this->tokenise( $method, ',' );
+		$methods = array_values( array_filter( is_array( $method ) ? $method : explode( ',', $method ) ) );
 
 		$routes = array_filter( $this->get_routes(), function( $el ) use ( $route, $methods ) {
 			return $el->route === $route && !empty( array_intersect( $el->methods, $methods ) );
@@ -101,7 +94,7 @@ class WP_Router {
 	 */
 	public function register( $method, string $route, $callback, array $options = [] ) {
 
-		$methods = $this->tokenise( $method, ',' );
+		$methods = array_values( array_filter( is_array( $method ) ? $method : explode( ',', $method ) ) );
 
 		if ( $this->exists( $route, $method ) ) {
 			return new WP_Error( 'route_already_exists', 'A route with that path and method already exists' );
@@ -166,32 +159,17 @@ class WP_Router {
 	 */
 	public function url_is_route() {
 		$group = $this->routes_by_method( $_SERVER[ 'REQUEST_METHOD' ] );
-		$request_parts = $this->tokenise( $this->request_uri );
-
-		$matched = false;
 
 		// Basic filtering of routes
 		if ( $group ) {
-			foreach ( $group as $i => $options ) {
-				$route_parts = $this->tokenise( $options->route );
-
-				if ( count( $route_parts ) === count( $request_parts ) ) {
-					$checked = 0;
-					foreach ( $route_parts as $key => $value ) {
-						if ( $value === $request_parts[ $key ] || preg_match( '/^' . router_get_setting( 'regex' ) . '$/', $value ) ) {
-							$checked++;
-						}
-					}
-
-					if ( $checked === count( $route_parts ) ) {
-						$matched = $options;
-						break;
-					}
+			foreach ( $group as $i => $route ) {
+				if ( $_matched = $route->is_matched() ) {
+					return $_matched;
 				}
 			}
 		}
 
-		return $matched;
+		return false;
 	}
 
 	/**

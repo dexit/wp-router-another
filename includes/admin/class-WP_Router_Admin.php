@@ -104,9 +104,9 @@ class WP_Router_Admin {
 				<form method="post" action="options.php">
 					<?php
 						if ( $route_id ) {
-							include 'admin/view-route.php';
+							include 'views/route.php';
 						} else {
-							include 'admin/view-dashboard.php';
+							include 'views/dashboard.php';
 						}
 					?>
 				</form>
