@@ -251,10 +251,10 @@ class WP_Route {
 
 		// Add body classes
 		$route_classes	= !empty( $this->options[ 'body_class' ] ) ? $this->options[ 'body_class' ] : '';
-		$route_classes	= is_string( $route_classes ) ? explode( ' ', $route_classes ) : [];
+		$route_classes	= $this->tokenise( $route_classes, ' ' );
 		$route_classes	= array_filter( array_merge( [ 'custom-route-page' ], $route_classes ) );
 
-		add_filter( 'body_class', function( $classes, $class ) use ( $route_classes ) {
+		add_filter( 'body_class', function( $classes ) use ( $route_classes ) {
 			$search = array_search( 'error404', $classes );
 			if ( $search !== false ) {
 				unset( $classes[ $search ] );
