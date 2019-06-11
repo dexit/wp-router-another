@@ -22,10 +22,11 @@ function wp_router_params(): array {
  * Get a single query paramater of the current route
  *
  * @param	string	$name
+ * @param	mixed	$fallback
  * @return	array
  */
-function wp_router_param( string $name ) {
+function wp_router_param( string $name, $fallback = false ) {
 	$params = wp_router_params();
 
-	return isset( $params[ $name ] ) ? $params[ $name ] : false;
+	return isset( $params[ $name ] ) ? $params[ $name ] : $fallback;
 }
