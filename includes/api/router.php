@@ -48,20 +48,3 @@ function wp_router_put( $route, $callback, $options = [] ) {
 function wp_router_delete( $route, $callback, $options = [] ) {
 	return wp_router()->delete( $route, $callback, $options );
 }
-
-/**
- * Get current query paramaters
- * 
- * @return	array
- */
-function wp_router_params(): array {
-	global $wp_query;
-
-	$params = [];
-
-	if ( isset( $wp_query->route_params ) ) {
-		$params = $wp_query->route_params;
-	}
-
-	return $params;
-}

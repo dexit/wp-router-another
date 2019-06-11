@@ -53,6 +53,7 @@ class WP_Router_Plugin {
 		router_require( 'core/class-WP_Route.php' );
 		router_require( 'core/class-WP_Router.php' );
 		router_require( 'includes/api/router.php' );
+		router_require( 'includes/api/route.php' );
 
 		if ( is_admin() ) {
 			router_require( 'includes/admin/class-WP_Router_Admin.php' );
