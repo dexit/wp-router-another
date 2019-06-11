@@ -196,6 +196,12 @@ class WP_Route {
 	 */
 	public function is_matched() {
 
+		// Don't match admin
+		if ( is_admin() ) {
+			return false;
+		}
+
+		// Get cached flag
 		if ( $this->is_matched ) {
 			return $this;
 		}
