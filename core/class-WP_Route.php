@@ -82,7 +82,7 @@ class WP_Route {
 
 		// Set object attributes
 		$this->id		= sanitize_title( $route . '-' . implode( '.', $methods ) );
-		$this->route	= $route;
+		$this->route	= '/' . trim( $route, '/' ) . '/';
 		$this->callback	= $callback;
 		$this->methods	= $methods;
 		$this->options	= wp_parse_args( $options, $this->options );
