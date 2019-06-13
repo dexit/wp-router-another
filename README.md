@@ -2,10 +2,10 @@
 
 Easily create custom WordPress routes with this plugin and helper functions.
 
-Comes with an easy to use API and basic admin interface.
+Comes with an easy to use API and basic admin interface. Now supports [Yoast SEO](https://yoast.com/wordpress/plugins/seo/).
 
 > **Attention**
-> Still a work in progress, and not tested with [networks/multisites]([https://wordpress.org/support/article/create-a-network/](https://wordpress.org/support/article/create-a-network/))
+> Still a work in progress, and not tested with [networks/multisites](https://wordpress.org/support/article/create-a-network/)
 
 ![Admin dashboard example](assets/images/admin-preview.png)
 

@@ -102,14 +102,16 @@ class WP_Route {
 
 		return $default;
 	}
+
 	/**
 	 * Get route options
 	 *
 	 * @param	string	$attr
+	 * @param	mixed	$default
 	 * @return	mixed
 	 */
-	public function get_option( string $name ) {
-		$option = isset( $this->options[ $name ] ) ? $this->options[ $name ] : false;
+	public function get_option( string $name, $default = false ) {
+		$option = isset( $this->options[ $name ] ) ? $this->options[ $name ] : $default;
 
 		// If option is a callable function
 		if ( is_callable( $option ) ) {
@@ -136,6 +138,18 @@ class WP_Route {
 		$option = apply_filters( 'wp_router/get_option=' . $name, $option, $this );
 
 		return $option;
+	}
+
+	/**
+	 * Combine default body classes with specific classes
+	 *
+	 * @return	array
+	 */
+	public function body_class() {
+		$route_classes	= $this->get_option( 'body_class', '' );
+		$route_classes	= $this->tokenise( $route_classes, ' ' );
+
+		return array_filter( array_merge( [ 'custom-route-page' ], $route_classes ) );
 	}
 
 	/**
@@ -227,6 +241,52 @@ class WP_Route {
 	}
 
 	/**
+	 * Create a fake WP_POST
+	 *
+	 * @return WP_Post
+	 */
+	public function fake_post() {
+		global $wp, $wp_query;
+
+		// Create the post obkect
+		$post_id = -99;
+
+		$wp_post = new WP_Post( (object)[
+			'ID'				=> $post_id,
+			'post_date'			=> current_time( 'mysql' ),
+			'post_date_gmt'		=> current_time( 'mysql', 1 ),
+			'post_title	'		=> $this->get_option( 'title' ),
+			'post_content'		=> '',
+			'post_status'		=> 'publish',
+			'comment_status'	=> 'closed',
+			'ping_status'		=> 'closed',
+			'post_name'			=> $this->request_uri, //'custom-route-faked-' . $this->id . '-' . rand( 1, 99999 ),
+			'post_type'			=> 'page',
+			'filter'			=> 'raw'
+		] );
+
+		// Add to WordPress cache
+		wp_cache_add( $post_id, $wp_post, 'posts' );
+
+		// Override query params
+		$wp_query->post					= $wp_post;
+		$wp_query->posts				= [ $wp_post ];
+		$wp_query->queried_object		= $wp_post;
+		$wp_query->queried_object_id	= $post_id;
+		$wp_query->found_posts			= 1;
+		$wp_query->post_count			= 1;
+		$wp_query->max_num_pages		= 1;
+		$wp_query->is_page				= true;
+		$wp_query->is_singular			= true;
+
+		// Set globals
+		$GLOBALS[ 'wp_query' ] = $wp_query;
+		$wp->register_globals();
+
+		return $wp_post;
+	}
+
+	/**
 	 * Call the callback and apply filters
 	 *
 	 * @return void
@@ -241,45 +301,44 @@ class WP_Route {
 			}
 		}
 
+		// Generate a fake post
+		$this->fake_post();
+
 		// Get route parameters
 		$params = $this->get_params();
 
 		// Add robots
-		if ( $this->options[ 'robots' ] ){
+		if ( $this->get_option( 'robots', false ) ) {
 			add_filter( 'wp_head', function() {
 				return '<meta name="robots" content="noindex,nofollow"/>';
 			} );
 		}
 
-		// Add a page title
+		// Add a basic page title
 		add_filter( 'the_title', [ $this, 'page_title' ], 10, 2 );
 		add_filter( 'wp_title', [ $this, 'page_title' ], 10, 1 );
 
-		// Add body classes
-		$route_classes	= !empty( $this->options[ 'body_class' ] ) ? $this->options[ 'body_class' ] : '';
-		$route_classes	= $this->tokenise( $route_classes, ' ' );
-		$route_classes	= array_filter( array_merge( [ 'custom-route-page' ], $route_classes ) );
+		// Add support for Yoast SEO
+		if ( class_exists( 'WPSEO_Frontend' ) ) {
 
-		add_filter( 'body_class', function( $classes ) use ( $route_classes ) {
-			$search = array_search( 'error404', $classes );
-			if ( $search !== false ) {
-				unset( $classes[ $search ] );
-			}
+			// Initiate Yoast frontend
+			$seo = WPSEO_Frontend::get_instance();
 
-			if ( $route_classes ) {
-				$classes = array_merge( $classes, $route_classes );
-			}
+			// Build title
+			add_filter( 'wpseo_title', function() use ( $seo ) {
+				$replacer			= new WPSEO_Replace_Vars();
+				$separator			= $replacer->replace( '%%sep%%', [] );
+				$separator			= ' ' . trim( $separator ) . ' ';
+				$separator_location	= ( is_rtl() ) ? 'left' : 'right';
+				return $seo->get_default_title( $separator, $separator_location, $this->get_option( 'title' ) );
+			} );
+		}
 
-			return $classes;
-		}, 10, 2 );
+		// Remove short link
+		add_filter( 'get_shortlink', '__return_false', 10 );
 
-		status_header( 200 );
-
-		// Modify query
-		global $wp_query;
-		$wp_query->is_404 = false;
-		$wp_query->query_vars[ 'pagename' ] = null;
-		$wp_query->route_params = $this->get_params();
+		// Add custom body classes
+		add_filter( 'body_class', [ $this, 'body_class' ], 10, 2 );
 
 		if ( is_callable( $this->callback ) ) {
 			call_user_func_array( $this->callback, [ $params ] );
