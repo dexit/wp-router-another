@@ -304,6 +304,11 @@ class WP_Route {
 		// Generate a fake post
 		$this->fake_post();
 
+		// Set globally accessibly variable
+		global $wp_router_match;
+
+		$wp_router_match = $this;
+
 		// Get route parameters
 		$params = $this->get_params();
 

@@ -30,3 +30,18 @@ function wp_router_param( string $name, $fallback = false ) {
 
 	return isset( $params[ $name ] ) ? $params[ $name ] : $fallback;
 }
+
+/**
+ * Helper function to check if the current page is a match route
+ *
+ * @return	boolean|WP_Route
+ */
+function is_wp_router() {
+	global $wp_router_match;
+
+	if ( !empty( $wp_router_match ) && $wp_router_match instanceof WP_Route ) {
+		return $wp_router_match;
+	}
+
+	return false;
+}

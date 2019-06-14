@@ -187,6 +187,26 @@ wp_router_get( '/path/:param1/:param2/:third', function() {
 } );
 ```
 
+### is_wp_router()
+
+`is_wp_router()`
+
+#### Description
+
+Call anywhere within WordPress to check if the current URL matched a custom route.
+
+#### Return
+
+*(false|WP_Route) Returns the route object if is a match. Else will return false.*
+
+#### Usage
+
+```php
+if ( function_exists( 'is_wp_router' ) && is_wp_router() ) {
+	echo 'This page is a custom route!';
+}
+```
+
 ## Route options and permissions
 
 There are additional options that can be passed in the `$options` parameter.
