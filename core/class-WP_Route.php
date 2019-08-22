@@ -255,7 +255,7 @@ class WP_Route {
 			'ID'				=> $post_id,
 			'post_date'			=> current_time( 'mysql' ),
 			'post_date_gmt'		=> current_time( 'mysql', 1 ),
-			'post_title	'		=> $this->get_option( 'title' ),
+			'post_title'		=> $this->get_option( 'title' ),
 			'post_content'		=> '',
 			'post_status'		=> 'publish',
 			'comment_status'	=> 'closed',
@@ -295,9 +295,13 @@ class WP_Route {
 
 		// Handle route permissions
 		if ( $this->options[ 'private' ] ) {
-			if ( !is_user_logged_in() || !current_user_can( $this->options[ 'capabilities' ] ) ) {
-				status_header( 401 );
-				wp_die( __( 'Sorry, you are not allowed to access this page.' ) );
+			if ( !is_user_logged_in() || $this->get_option( 'capabilities' ) && !current_user_can( $this->get_option( 'capabilities' ) ) ) {
+				if ( $this->get_option( 'unauthorized' ) && is_callable( $this->get_option( 'unauthorized' ) ) ) {
+					call_user_func( $this->get_option( 'unauthorized' ) );
+				} else {
+					status_header( 401 );
+					wp_die( __( 'Sorry, you are not allowed to access this page.' ) );
+				}
 			}
 		}
 
