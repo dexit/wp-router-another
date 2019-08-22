@@ -6,15 +6,13 @@
  * @return	array
  */
 function wp_router_params(): array {
-	global $wp_query;
+	global $wp_router_match;
 
-	$params = [];
-
-	if ( isset( $wp_query->route_params ) ) {
-		$params = $wp_query->route_params;
+	if ( $wp_router_match ) {
+		$params = $wp_router_match->get_params();
 	}
 
-	return $params;
+	return [];
 }
 
 
