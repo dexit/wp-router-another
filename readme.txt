@@ -1,4 +1,4 @@
-=== WP Router ===
+=== WPRouter ===
 Contributors: thelevicole
 Tags: development, routes
 Requires at least: 5.2

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: WP Router
+ * Plugin Name: WPRouter
  * Plugin URI: https://github.com/thelevicole/wp-router/
  * Author: Levi Cole
  * Author URI: https://thelevicole.com
@@ -171,15 +171,15 @@ class WP_Router_Plugin {
  * @return	WP_Router_Plugin		Returns class instance
  */
 function wp_router_plugin() {
-	global $wp_router_controller;
+	global $wp_router_plugin;
 
 	// If not initiated, initate
-	if ( !isset( $wp_router_controller ) ) {
-		$wp_router_controller = new WP_Router_Plugin;
-		$wp_router_controller->initialise();
+	if ( !isset( $wp_router_plugin ) ) {
+		$wp_router_plugin = new WP_Router_Plugin;
+		$wp_router_plugin->initialise();
 	}
 
-	return $wp_router_controller;
+	return $wp_router_plugin;
 }
 
 
