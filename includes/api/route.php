@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Get current query paramaters of the current route
+ * Get current query parameters of the current route
  *
  * @return	array
  */
@@ -17,7 +17,7 @@ function wp_router_params(): array {
 
 
 /**
- * Get a single query paramater of the current route
+ * Get a single query parameter of the current route
  *
  * @param	string	$name
  * @param	mixed	$fallback

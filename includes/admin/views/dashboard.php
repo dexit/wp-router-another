@@ -1,18 +1,18 @@
 <table class="widefat striped">
 	<thead>
 		<tr>
-			<td>Route</td>
-			<td>Title</td>
-			<td>Method(s)</td>
-			<td>Permissions</td>
+			<td><?= __( 'Route', 'wprouter' ); ?></td>
+			<td><?= __( 'Title', 'wprouter' ); ?></td>
+			<td><?= __( 'Method(s)', 'wprouter' ); ?></td>
+			<td><?= __( 'Permissions', 'wprouter' ); ?></td>
 		</tr>
 	</thead>
 	<tfoot>
 		<tr>
-			<td>Route</td>
-			<td>Title</td>
-			<td>Method(s)</td>
-			<td>Permissions</td>
+			<td><?= __( 'Route', 'wprouter' ); ?></td>
+			<td><?= __( 'Title', 'wprouter' ); ?></td>
+			<td><?= __( 'Method(s)', 'wprouter' ); ?></td>
+			<td><?= __( 'Permissions', 'wprouter' ); ?></td>
 		</tr>
 	</tfoot>
 	<tbody>
@@ -22,7 +22,7 @@
 					<td>
 						<strong><?= $route->route; ?></strong>
 						<div class="row-actions">
-							<span class="edit"><a href="<?= add_query_arg( 'route', $route->id, $this->url ); ?>">Settings</a></span>
+							<span class="edit"><a href="<?= add_query_arg( 'route', $route->id, $this->url ); ?>"><?= __( 'Settings', 'wprouter' ); ?></a></span>
 						</div>
 					</td>
 					<td>
@@ -41,7 +41,7 @@
 		<?php else: ?>
 			<tr>
 				<td colspan="3">
-					No routes
+					<?= __( 'No routes', 'wprouter' ); ?>
 				</td>
 			</tr>
 		<?php endif ?>

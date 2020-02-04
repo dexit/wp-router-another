@@ -1,13 +1,16 @@
 <?php
 
 /**
- * Plugin Name: WordPress Custom Router
- * Description: Create custom WordPress routes with a easy to use API and admin panel.
- * Version: 0.1.0
+ * Plugin Name: WP Router
  * Plugin URI: https://github.com/thelevicole/wp-router/
  * Author: Levi Cole
  * Author URI: https://thelevicole.com
- * Text Domain: customrouter
+ * Description: Create custom WordPress routes with a easy to use API and admin panel. Made by developers, for developers.
+ * Version: 1.0.0
+ * Text Domain: wprouter
+ * Network: true
+ * Requires at least: 5.2
+ * Requires PHP: 7.2
  */
 
 class WP_Router_Plugin {
@@ -31,7 +34,7 @@ class WP_Router_Plugin {
 		$this->settings = [
 
 			// Generic
-			'version'		=> '0.1.0',
+			'version'		=> '1.0.0',
 			'path'			=> plugin_dir_path( __FILE__ ),
 			'url'			=> plugin_dir_url( __FILE__ ),
 			'basename'		=> plugin_basename( __FILE__ ),
@@ -48,15 +51,20 @@ class WP_Router_Plugin {
 		$this->define( 'PATH', $this->settings[ 'path' ] );
 		$this->define( 'URL', $this->settings[ 'url' ] );
 
-		// API includes
-		require_once WP_Router_PATH . 'includes/api/general.php';
-		router_require( 'core/class-WP_Route.php' );
-		router_require( 'core/class-WP_Router.php' );
-		router_require( 'includes/api/router.php' );
-		router_require( 'includes/api/route.php' );
+		// General helpers
+		$this->require( 'includes/api/general.php' );
 
+		// Core controllers
+		$this->require( 'core/class-WP_Route.php' );
+		$this->require( 'core/class-WP_Router.php' );
+
+		// Controler helpers
+		$this->require( 'includes/api/router.php' );
+		$this->require( 'includes/api/route.php' );
+
+		// Admin only requirements
 		if ( is_admin() ) {
-			router_require( 'includes/admin/class-WP_Router_Admin.php' );
+			$this->require( 'includes/admin/class-WP_Router_Admin.php' );
 		}
 
 
@@ -80,6 +88,45 @@ class WP_Router_Plugin {
 
 		if ( !defined( $key ) ) {
 			define( $key, $value );
+		}
+	}
+
+
+	/**
+	 * Return an absolute path from relative
+	 *
+	 * @param	string	$path	Path to plugin file
+	 * @return	string
+	 */
+	public function get_path( string $path ): string {
+		return WP_Router_PATH . ltrim( $path, '/' );
+	}
+
+	/**
+	 * Include file from relative path
+	 *
+	 * @param	string	$path
+	 * @return	void
+	 */
+	public function include( string $path ) {
+		$path = $this->get_path( $path );
+
+		if ( file_exists( $path ) ) {
+			include $path;
+		}
+	}
+
+	/**
+	 * Require file from relative path
+	 *
+	 * @param	string	$path
+	 * @return	void
+	 */
+	public function require( string $path ) {
+		$path = $this->get_path( $path );
+
+		if ( file_exists( $path ) ) {
+			require $path;
 		}
 	}
 
@@ -123,21 +170,21 @@ class WP_Router_Plugin {
  *
  * @return	WP_Router_Plugin		Returns class instance
  */
-function router_plugin() {
-	global $router_plugin_controller;
+function wp_router_plugin() {
+	global $wp_router_controller;
 
 	// If not initiated, initate
-	if ( !isset( $router_plugin_controller ) ) {
-		$router_plugin_controller = new WP_Router_Plugin;
-		$router_plugin_controller->initialise();
+	if ( !isset( $wp_router_controller ) ) {
+		$wp_router_controller = new WP_Router_Plugin;
+		$wp_router_controller->initialise();
 	}
 
-	return $router_plugin_controller;
+	return $wp_router_controller;
 }
 
 
 /**
  * Init plugin
  */
-router_plugin();
+wp_router_plugin();
 

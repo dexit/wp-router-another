@@ -1,17 +1,18 @@
-# URL router for WordPress
+=== WP Router ===
+Contributors: thelevicole
+Tags: development, routes
+Requires at least: 5.2
+Tested up to: 5.3.2
+Stable tag: trunk
+Requires PHP: 7.2.0
+
+Create custom WordPress routes with a easy to use API and admin panel. Made by developers, for developers.
+
+=== Description ===
 
 Easily create custom WordPress routes with this plugin and helper functions.
 
 Comes with an easy to use API and basic admin panel. Now with basic support for Yoast SEO.
-
-![Admin dashboard example](assets/images/admin-preview.png)
-
-## Requirements
-
-**PHP** Version 7.2+
-**WordPress** Version 5.2+
-
-## Registering a route
 
 Once the plugin has been installed and activated it's easy to start registering routes with the helper functions. *A full list of functions is available below.*
 

@@ -97,7 +97,7 @@ class WP_Router {
 		$methods = array_values( array_filter( is_array( $method ) ? $method : explode( ',', $method ) ) );
 
 		if ( $this->exists( $route, $method ) ) {
-			return new WP_Error( 'route_already_exists', 'A route with that path and method already exists' );
+			return new WP_Error( 'route_already_exists', __( 'A route with that path and method already exists', 'wprouter' ) );
 		}
 
 		// Store route
@@ -173,7 +173,7 @@ class WP_Router {
 	}
 
 	/**
-	 * Header satus and handling route callback
+	 * Header status and handling route callback
 	 *
 	 * @return void
 	 */
@@ -194,7 +194,7 @@ class WP_Router {
 function wp_router() {
 	global $wp_router_controller;
 
-	// If not initiated, initate
+	// If not initiated, initiate
 	if ( !isset( $wp_router_controller ) ) {
 		$wp_router_controller = new WP_Router;
 	}
@@ -204,7 +204,7 @@ function wp_router() {
 
 
 /**
- * Initiate on inlcude
+ * Initiate on include
  */
 wp_router();
 

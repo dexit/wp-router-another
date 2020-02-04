@@ -6,7 +6,7 @@
 class WP_Route {
 
 	/**
-	 * Regex part for query paramters
+	 * Regex part for query parameters
 	 *
 	 * @var string
 	 */
@@ -176,7 +176,7 @@ class WP_Route {
 	}
 
 	/**
-	 * Get URL paramaters
+	 * Get URL parameters
 	 *
 	 * @return	array
 	 */
@@ -184,7 +184,7 @@ class WP_Route {
 		$route_parts	= $this->tokenise( $this->route );
 		$request_parts	= $this->tokenise( $this->request_uri );
 
-		// Find query paramaters
+		// Find query parameters
 		preg_match_all( '/' . $this->regex . '/', $this->route, $matches );
 
 		$return = [];
@@ -248,7 +248,7 @@ class WP_Route {
 	public function fake_post() {
 		global $wp, $wp_query;
 
-		// Create the post obkect
+		// Create the post object
 		$post_id = -99;
 
 		$wp_post = new WP_Post( (object)[
@@ -268,7 +268,7 @@ class WP_Route {
 		// Add to WordPress cache
 		wp_cache_add( $post_id, $wp_post, 'posts' );
 
-		// Override query params
+		// Override query parameters
 		$wp_query->post					= $wp_post;
 		$wp_query->posts				= [ $wp_post ];
 		$wp_query->queried_object		= $wp_post;
@@ -328,6 +328,7 @@ class WP_Route {
 		add_filter( 'wp_title', [ $this, 'page_title' ], 10, 1 );
 
 		// Add support for Yoast SEO
+		// @todo Look at using `wpseo_replace_vars()` function instead
 		if ( class_exists( 'WPSEO_Frontend' ) ) {
 
 			// Initiate Yoast frontend
@@ -338,7 +339,7 @@ class WP_Route {
 				$replacer			= new WPSEO_Replace_Vars();
 				$separator			= $replacer->replace( '%%sep%%', [] );
 				$separator			= ' ' . trim( $separator ) . ' ';
-				$separator_location	= ( is_rtl() ) ? 'left' : 'right';
+				$separator_location	= is_rtl() ? 'left' : 'right';
 				return $seo->get_default_title( $separator, $separator_location, $this->get_option( 'title' ) );
 			} );
 		}
@@ -354,7 +355,7 @@ class WP_Route {
 			exit;
 		}
 
-		return new WP_Error( 'not_callable', 'Route handler is not callable' );
+		return new WP_Error( 'not_callable', __( 'Route handler is not callable', 'wprouter' ) );
 	}
 
 }

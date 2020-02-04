@@ -2,15 +2,15 @@
 	$found = wp_router()->route_by_id( $route_id );
 ?>
 
-<a href="<?= $this->url;?>">&laquo; Go back</a>
+<a href="<?= $this->url;?>">&laquo; <?= __( 'Go back', 'wprouter' ); ?></a>
 <hr>
 <?php if ( $found ): ?>
-	<h2>Editing: <code><?= $found->route; ?></code></h2>
+	<h2><?= __( 'Editing:', 'wprouter' ); ?> <code><?= $found->route; ?></code></h2>
 	<input type="hidden" name="route-id" value="<?= $route_id; ?>">
 	<table class="form-table">
 		<tbody>
 			<tr>
-				<th scope="row">Route title</th>
+				<th scope="row"><?= __( 'Route title', 'wprouter' ); ?></th>
 				<td>
 					<input type="text" name="route-settings-options[title]" style="width: 100%; max-width: 300px;" value="<?= $found->get_option( 'title' ); ?>">
 				</td>

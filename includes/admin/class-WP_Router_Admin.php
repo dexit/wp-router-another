@@ -6,6 +6,13 @@
 class WP_Router_Admin {
 
 	/**
+	 * The admin page title
+	 *
+	 * @var string
+	 */
+	protected $title = 'WP Router';
+
+	/**
 	 * The admin page slug
 	 *
 	 * @var string
@@ -39,7 +46,7 @@ class WP_Router_Admin {
 		/**
 		 * @see		https://developer.wordpress.org/reference/functions/register_setting/
 		 *
-		 * @param	string		$option_group	A settings group name. Should correspond to a whitelisted option key name. Default whitelisted option key names include "general," "discussion," and "reading," among others.
+		 * @param	string		$option_group	A settings group name. Should correspond to a white listed option key name. Default white listed option key names include "general," "discussion," and "reading," among others.
 		 * @param	string		$option_name	The name of an option to sanitize and save.
 		 * @param	array		$args			Data used to describe the setting when registered.
 		 */
@@ -61,7 +68,7 @@ class WP_Router_Admin {
 		 * @param	callable	$callback	Function that fills the section with the desired content. The function should echo its output.
 		 * @param	string		$page		The menu page on which to display this section. Should match $menu_slug from Function Reference/add theme page if you are adding a section to an 'Appearance' page, or Function Reference/add options page if you are adding a section to a 'Settings' page.
 		 */
-		add_settings_section( 'route-settings', 'Route settings', function() {
+		add_settings_section( 'route-settings', __( 'Route settings', 'wprouter' ), function() {
 			echo 'Add a page title to this route. Accessible via `the_title()` and `get_the_title()` functions.';
 		}, $this->slug );
 
@@ -75,7 +82,7 @@ class WP_Router_Admin {
 		 * @param	string		$section	The section of the settings page in which to show the box (default or a section you added with add_settings_section, look at the page in the source to see what the existing ones are.)
 		 * @param	array		$args		Extra arguments passed into the callback function
 		 */
-		add_settings_field( 'title', 'Route title', function() {
+		add_settings_field( 'title', __( 'Route title', 'wprouter' ), function() {
 			echo '<input type="text" name="route-settings-options[title]" style="width: 100%; max-width: 300px;">';
 		}, $this->slug, 'route-settings' );
 
@@ -87,7 +94,7 @@ class WP_Router_Admin {
 	 * @return	void
 	 */
 	public function admin_menu() {
-		add_menu_page( 'WP Router', 'WP Router', router_get_setting( 'capability' ), $this->slug, [ $this, 'render_admin' ], 'dashicons-randomize', 99 );
+		add_menu_page( $this->title, $this->title, wp_router_plugin()->get_setting( 'capability' ), $this->slug, [ $this, 'render_admin' ], 'dashicons-randomize', 99 );
 	}
 
 	/**
@@ -99,7 +106,7 @@ class WP_Router_Admin {
 		$route_id = !empty( $_GET[ 'route' ] ) ? sanitize_text_field( $_GET[ 'route' ] ) : false;
 		?>
 			<main class="wrap">
-				<h1>WP Router</h1>
+				<h1><?= $this->title; ?></h1>
 				<hr>
 				<form method="post" action="options.php">
 					<?php
@@ -116,4 +123,4 @@ class WP_Router_Admin {
 
 }
 
-router_plugin()->admin = new WP_Router_Admin;
+wp_router_plugin()->admin = new WP_Router_Admin;
